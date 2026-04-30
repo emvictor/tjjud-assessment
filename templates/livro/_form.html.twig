@@ -1,0 +1,56 @@
+{{ form_start(form) }}
+<div class="mb-3">
+    {{ form_label(form.titulo, 'Título do Livro', {'label_attr': {'class': 'form-label fw-semibold' }}
+    ) }}
+    {{ form_widget(form.titulo, {'attr': {'class': 'form-control', 'placeholder': 'Ex: O Guarani' }}
+    ) }}
+    {{ form_errors(form.titulo) }}
+</div>
+<div class="mb-3">
+    {{ form_label(form.editora, 'Editora', {'label_attr': {'class': 'form-label fw-semibold' }}
+    ) }}
+    {{ form_widget(form.editora, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Globo' }}
+    ) }}
+    {{ form_errors(form.editora) }}
+</div>
+<div class="mb-3">
+    {{ form_label(form.edicao, 'Edição', {'label_attr': {'class': 'form-label fw-semibold' }}
+    ) }}
+    {{ form_widget(form.edicao, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 1' }}
+    ) }}
+    {{ form_errors(form.edicao) }}
+</div>
+<div class="mb-3">
+    {{ form_label(form.anoPublicacao, 'Ano de Publicação', {'label_attr': {'class': 'form-label fw-semibold' }}
+    ) }}
+    {{ form_widget(form.anoPublicacao, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 2020' }}
+    ) }}
+    {{ form_errors(form.anoPublicacao) }}
+</div>
+<price-field class="mb-3">
+    {{ form_label(form.valor, 'Valor (R$)', {'label_attr': {'class': 'form-label fw-semibold' }}
+    ) }}
+    {{ form_widget(form.valor, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 12.00' }}
+    ) }}
+    {{ form_errors(form.valor) }}
+</price-field>
+<div>
+    {{ form_label(form.autores, 'Autores', {'label_attr': {'class': 'form-label fw-semibold' }}
+    ) }}
+    {{ form_widget(form.autores, {'attr': {'class': 'form-select', 'multiple': 'multiple' }}
+    ) }}
+    {{ form_errors(form.autores) }}
+</div>
+<div>
+    {{ form_label(form.assuntos, 'Assuntos', {'label_attr': {'class': 'form-label fw-semibold' }}
+    ) }}
+    {{ form_widget(form.assuntos, {'attr': {'class': 'form-select', 'multiple': 'multiple' }}
+    ) }}
+    {{ form_errors(form.assuntos) }}
+</div>
+
+<button class="btn btn-success w-100 mt-2">
+    <i class="bi bi-check-circle"></i>
+    {{ button_label|default('Salvar') }}
+</button>
+{{ form_end(form) }}

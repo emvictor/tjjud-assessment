@@ -1,0 +1,9 @@
+<form method="post" action="{{ path('app_livro_delete', {'id': livro.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livro.id) }}">
+
+        <confirm-button title="Excluir Livro" message="Você está prestes a excluir o livro <strong>{{ livro.titulo }}</strong>. Esta ação não pode ser desfeita.">
+            <i class="bi bi-trash"></i>
+            Excluir
+        </confirm-button>
+    </form>
+    

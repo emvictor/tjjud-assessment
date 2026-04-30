@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Assunto{% endblock %}
+
+{% block body %}
+    <h1>Create new Assunto</h1>
+
+    {{ include('assunto/_form.html.twig') }}
+
+    <a href="{{ path('app_assunto_index') }}">back to list</a>
+{% endblock %}

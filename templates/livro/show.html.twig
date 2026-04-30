@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Detalhes do Livro
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <action-card title="Informações do Livro" variant="secondary">
+                    <div class="row mb-4">
+                        <div class="col-sm-4 fw-bold text-muted text-uppercase small">
+                            Título
+                        </div>
+                        <div class="col-sm-8 fs-5">
+                            {{ livro.titulo }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-sm-4 fw-bold text-muted text-uppercase small">
+                            {{ livro.autores.count() > 1 ? 'Autores' : 'Autor' }}
+                        </div>
+                        <div class="col-sm-8">
+                            {% for autor in livro.autores %}
+                                <span class="badge bg-light text-dark border me-1">
+                                    {{ autor }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <hr class="text-muted opacity-25">
+
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <div class="fw-bold text-muted small text-uppercase">
+                                    Editora
+                                </div>
+                                <div>
+                                    {{ livro.editora }}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="fw-bold text-muted small text-uppercase">
+                                    Edição
+                                </div>
+                                <div>
+                                    {{ livro.edicao }}
+                                    ª
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="fw-bold text-muted small text-uppercase">
+                                    Ano
+                                </div>
+                                <div>
+                                    {{ livro.anoPublicacao }}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="fw-bold text-muted small text-uppercase">
+                                    Preço
+                                </div>
+                                <div class="text-success fw-bold">
+                                    R$
+                                    {{ livro.valor|number_format(2, ',', '.') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 pt-3 border-top d-flex justify-content-between align-items-center">
+                            <a href="{{ path('app_livro_index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-list"></i>
+                                Voltar
+                            </a>
+
+                            <div class="btn-group">
+                                <a href="{{ path('app_livro_edit', {id: livro.id}) }}" class="btn btn-primary">
+                                    Editar
+                                </a>
+                                <confirm-button message="Excluir '{{ livro.titulo }}' permanentemente?">
+                                    Excluir
+                                </confirm-button>
+                            </div>
+                        </div>
+                    </action-card>
+
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    

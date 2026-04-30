@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Assunto index
+{% endblock %}
+
+{% block body %}
+    <h1>
+        Assunto index
+    </h1>
+
+    <table class="table table-striped table-hover mt-3">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Descricao
+                </th>
+                <th>
+                    actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assunto in assuntos %}
+                <tr>
+                    <td>
+                        {{ assunto.id }}
+                    </td>
+                    <td>
+                        {{ assunto.descricao }}
+                    </td>
+                    <td>
+                        <a href="{{
+                            path(
+                                'app_assunto_show',
+                                {
+                                    id: assunto.id
+                                }
+                            )
+                            }}">
+                            show
+                        </a>
+                        <a href="{{
+                            path(
+                                'app_assunto_edit',
+                                {
+                                    id: assunto.id
+                                }
+                            )
+                            }}">
+                            edit
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">
+                        no records found
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_assunto_new') }}">Create new</a>
+{% endblock %}

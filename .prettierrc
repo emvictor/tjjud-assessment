@@ -1,0 +1,6 @@
+{
+  "printWidth": 80,
+  "tabWidth": 4,
+  "plugins": ["@zackad/prettier-plugin-twig-melody"],
+  "twigMelodyPlugins": ["node_modules/@zackad/prettier-plugin-twig-melody"]
+}

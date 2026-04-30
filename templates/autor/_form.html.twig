@@ -1,0 +1,12 @@
+{{ form_start(form) }}
+<div class="mb-3">
+    {{ form_label(form.nome, 'Nome do Autor', {'label_attr': {'class': 'form-label fw-semibold' }}
+    ) }}
+    {{ form_widget(form.nome, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Machado de Assis' }}
+    ) }}
+</div>
+<button class="btn btn-success w-100 mt-2">
+    <i class="bi bi-check-circle"></i>
+    {{ button_label|default('Salvar') }}
+</button>
+{{ form_end(form) }}

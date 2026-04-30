@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Assunto
+{% endblock %}
+
+{% block body %}
+    <h1>
+        Assunto
+    </h1>
+
+    <table class="table table-striped table-hover mt-3">
+        <tbody>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <td>
+                    {{ assunto.id }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Descricao
+                </th>
+                <td>
+                    {{ assunto.descricao }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_assunto_index') }}">back to list</a>
+
+    <a href="{{
+        path(
+            'app_assunto_edit',
+            {
+                id: assunto.id
+            }
+        )
+        }}">
+        edit
+    </a>
+
+    {{ include('assunto/_delete_form.html.twig') }}
+{% endblock %}
