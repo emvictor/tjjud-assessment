@@ -26,9 +26,9 @@
     </div>
 
     <div class="col-md-3 mb-2">
-        {{ form_label(form.anoPublicacao, 'Ano', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
+        {{ form_label(form.anoPublicacao, 'Ano de Publicação', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
         ) }}
-        {{ form_widget(form.anoPublicacao, {'attr': {'class': 'form-control shadow-sm', 'placeholder': '2024' }}
+        {{ form_widget(form.anoPublicacao, {'attr': {'class': 'form-control shadow-sm', 'placeholder': '' }}
         ) }}
         {{ form_errors(form.anoPublicacao) }}
     </div>
@@ -60,8 +60,11 @@
     <div class="col-12 mb-2">
         {{ form_label(form.assuntos, 'Assuntos', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
         ) }}
-        {{ form_widget(form.assuntos, {'attr': {'class': 'form-select shadow-sm', 'style': 'height: 80px;' }}
+        {{ form_widget(form.assuntos, {'attr': {'class': 'form-select shadow-sm', 'style': 'height: 100px;' }}
         ) }}
+        <small class="text-muted tiny mt-1 d-block">
+            Segure Ctrl (ou Cmd) para selecionar múltiplos.
+        </small>
         {{ form_errors(form.assuntos) }}
     </div>
 </div>
