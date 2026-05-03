@@ -1,9 +1,6 @@
 <form method="post" action="{{ path('app_livro_delete', {'id': livro.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livro.id) }}">
 
-        <modal-button title="Excluir Livro" message="Você está prestes a excluir o livro <strong>{{ livro.titulo }}</strong>. Esta ação não pode ser desfeita.">
-            <i class="bi bi-trash"></i>
-            Excluir
-        </modal-button>
+        <twig:delete_button title="Excluir Livro" message="Deseja realmente excluir o livro <strong>{{ livro.titulo }}</strong>?" class="btn border-0"></twig:delete_button>
     </form>
     
