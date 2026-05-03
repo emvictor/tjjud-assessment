@@ -18,7 +18,7 @@ final class LivroController extends AbstractController
     public function index(LivroRepository $livroRepository): Response
     {
         return $this->render('livro/index.html.twig', [
-            'livros' => $livroRepository->findAll(),
+            'livros' => $livroRepository->findAllOrderedByTitle(),
         ]);
     }
 

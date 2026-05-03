@@ -18,7 +18,7 @@ final class AutorController extends AbstractController
     public function index(AutorRepository $autorRepository): Response
     {
         return $this->render('autor/index.html.twig', [
-            'autors' => $autorRepository->findAll(),
+            'autors' => $autorRepository->findBy([], ['nome' => 'ASC']),
         ]);
     }
 
@@ -30,10 +30,16 @@ final class AutorController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($autor);
-            $entityManager->flush();
+            try {
 
-            return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
+                $entityManager->persist($autor);
+                $entityManager->flush();
+                
+                $this->addFlash('success','Autor cadastrado com sucesso!');
+                return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Ocorreu um erro ao cadastrar o autor: ' . $e->getMessage());
+            }
         }
 
         return $this->render('autor/new.html.twig', [
