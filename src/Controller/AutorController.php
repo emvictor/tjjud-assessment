@@ -72,19 +72,23 @@ final class AutorController extends AbstractController
     public function delete(Request $request, Autor $autor, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $autor->getId(), $request->getPayload()->getString('_token'))) {
-            if (!$autor->getLivros()->isEmpty()) {
-                $this->addFlash('danger', 'Não é possível excluir um autor que possui livros associados.');
-                return $this->redirectToRoute('app_autor_show', ['id' => $autor->getId()], Response::HTTP_SEE_OTHER);
-            }
-            try {
-                $entityManager->remove($autor);
-                $entityManager->flush();
-            } catch (\Exception $e) {
-                $this->addFlash('danger', 'Ocorreu um erro ao tentar excluir o autor: ' . $e->getMessage());
-                return $this->redirectToRoute('app_autor_show', ['id' => $autor->getId()], Response::HTTP_SEE_OTHER);
-            }
+        
+        if (!$autor->getLivros()->isEmpty()) {
+            $this->addFlash('danger', 'Operação negada: Este autor possui ' . $autor->getLivros()->count() . ' livro(s) associado(s) e não pode ser excluído.');
+            
+            return $this->redirectToRoute('app_autor_show', ['id' => $autor->getId()]);
         }
 
-        return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
+        try {
+            $entityManager->remove($autor);
+            $entityManager->flush();
+            $this->addFlash('success', 'Autor removido com sucesso!');
+        } catch (\Exception $e) {
+            $this->addFlash('danger', 'Erro técnico ao excluir: ' . $e->getMessage());
+            return $this->redirectToRoute('app_autor_show', ['id' => $autor->getId()], Response::HTTP_SEE_OTHER);
+        }
+    }
+
+    return $this->redirectToRoute('app_autor_index');
     }
 }

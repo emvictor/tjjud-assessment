@@ -26,14 +26,25 @@ final class LivroController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $livro = new Livro();
+
+        if ($request->isMethod('POST')) {
+            $this->sanitizePriceInput($request);
+        }
+
         $form = $this->createForm(LivroType::class, $livro);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($livro);
-            $entityManager->flush();
+            try {
 
-            return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
+                $entityManager->persist($livro);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Livro cadastrado com sucesso!');
+                return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Ocorreu um erro ao cadastrar o livro: ' . $e->getMessage());
+            }
         }
 
         return $this->render('livro/new.html.twig', [
@@ -53,13 +64,23 @@ final class LivroController extends AbstractController
     #[Route('/{id}/edit', name: 'app_livro_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Livro $livro, EntityManagerInterface $entityManager): Response
     {
+        if ($request->isMethod('POST')) {
+            $this->sanitizePriceInput($request);
+        }
+
         $form = $this->createForm(LivroType::class, $livro);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            try {
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
+                $this->addFlash('success', 'Livro atualizado com sucesso!');
+                return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Ocorreu um erro ao atualizar o livro: ' . $e->getMessage());
+                return $this->redirectToRoute('app_livro_edit', ['id' => $livro->getId()], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->render('livro/edit.html.twig', [
@@ -71,11 +92,27 @@ final class LivroController extends AbstractController
     #[Route('/{id}', name: 'app_livro_delete', methods: ['POST'])]
     public function delete(Request $request, Livro $livro, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$livro->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($livro);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete' . $livro->getId(), $request->getPayload()->getString('_token'))) {
+            try {
+
+                $entityManager->remove($livro);
+                $entityManager->flush();
+                $this->addFlash('success', 'Livro excluído com sucesso!');
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Ocorreu um erro ao excluir o livro: ' . $e->getMessage());
+                return $this->redirectToRoute('app_livro_show', ['id' => $livro->getId()], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function sanitizePriceInput(Request $request): void
+    {
+        $livroData = $request->request->all('livro');
+        if (isset($livroData['valor'])) {
+            $livroData['valor'] = str_replace(',', '.', $livroData['valor']);
+            $request->request->set('livro', $livroData);
+        }
     }
 }
