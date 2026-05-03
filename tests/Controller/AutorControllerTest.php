@@ -69,6 +69,7 @@ final class AutorControllerTest extends WebTestCase
 
         $autor = $this->autorRepository->findOneBy(['nome' => 'Clarice Lispector']);
         self::assertNotNull($autor);
+        $this->client->followRedirect();
         self::assertSelectorExists('.alert-success');
     }
 
