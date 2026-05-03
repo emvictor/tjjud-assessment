@@ -25,9 +25,9 @@
                         </div>
                         <div class="col-sm-8">
                             {% for autor in livro.autores %}
-                                <span class="badge bg-light text-dark border me-1">
+                                <a href="{{ path('app_autor_show', {id: autor.id}) }}" class="badge bg-light text-dark border me-1">
                                     {{ autor }}
-                                </span>
+                                </a>
                             {% endfor %}
                         </div>
                     </div>
@@ -77,13 +77,13 @@
                                 Voltar
                             </a>
 
-                            <div class="btn-group">
+                            <div>
                                 <a href="{{ path('app_livro_edit', {id: livro.id}) }}" class="btn btn-primary">
                                     Editar
                                 </a>
-                                <confirm-button message="Excluir '{{ livro.titulo }}' permanentemente?">
+                                <modal-button message="Excluir '{{ livro.titulo }}' permanentemente?">
                                     Excluir
-                                </confirm-button>
+                                </modal-button>
                             </div>
                         </div>
                     </action-card>

@@ -9,7 +9,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+
 #[ORM\Entity(repositoryClass: LivroRepository::class)]
+#[UniqueEntity(
+    fields: ['titulo', 'editora', 'edicao'],
+    message: 'livro.erro.duplicado')]
 class Livro
 {
     #[ORM\Id]
@@ -43,9 +47,6 @@ class Livro
      */
     #[ORM\ManyToMany(targetEntity: Assunto::class, inversedBy: 'livros')]
     private Collection $assuntos;
-
-    #[ORM\Entity(repositoryClass: LivroRepository::class)]
-    #[UniqueEntity(fields: ['titulo', 'autores', 'editora', 'edicao', 'anoPublicacao'], message: 'Já existe um livro com estes dados informados.')]
 
     public function __construct()
     {

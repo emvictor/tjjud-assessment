@@ -72,8 +72,23 @@ final class AssuntoController extends AbstractController
     public function delete(Request $request, Assunto $assunto, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$assunto->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($assunto);
-            $entityManager->flush();
+            
+            // Check if there are any books associated with this subject
+            if (!$assunto->getLivros()->isEmpty()) {
+                $this->addFlash('danger', 'Não é possível excluir um assunto que possui livros associados.');
+                
+                // Redirect back to show to display the flash message
+                return $this->redirectToRoute('app_assunto_show', ['id' => $assunto->getId()], Response::HTTP_SEE_OTHER);
+            }
+
+            try {
+                $entityManager->remove($assunto);
+                $entityManager->flush();
+                $this->addFlash('success', 'Assunto excluído com sucesso.');
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Ocorreu um erro ao tentar excluir o assunto.');
+                return $this->redirectToRoute('app_assunto_show', ['id' => $assunto->getId()], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->redirectToRoute('app_assunto_index', [], Response::HTTP_SEE_OTHER);

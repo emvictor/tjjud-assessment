@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+    <div id="test-relatorio-data" data-payload="{{ relatorio|json_encode }}" style="display: none;"></div>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>
             Relatório Geral (Agrupado por Autor)
@@ -14,12 +15,12 @@
         </button>
     </div>
 
-    {# O array 'relatorio' vem do Controller. A chave é o nome do autor, o valor é a lista de livros dele #}
     {% for autor, livros in relatorio %}
         <div class="card mb-4 shadow-sm">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    Autor(a): {{ autor }}
+                    Autor(a):
+                    {{ autor }}
                 </h4>
             </div>
             <div class="card-body p-0">
@@ -50,29 +51,30 @@
                         {% for livro in livros %}
                             <tr>
                                 <td>
-                                    <strong>{{ livro.livro_titulo }}</strong>
+                                    <strong>
+                                        {{ livro.livro_titulo }}
+                                    </strong>
                                 </td>
                                 <td>
                                     {{ livro.livro_editora }}
                                 </td>
                                 <td>
-                                    {{ livro.livro_edicao }}ª
+                                    {{ livro.livro_edicao }}
+                                    ª
                                 </td>
                                 <td>
                                     {{ livro.livro_ano }}
                                 </td>
                                 <td>
                                     <em>
-                                        {{
-                                            livro.assuntos|default(
+                                        {{ livro.assuntos|default(
                                                 'Nenhum assunto'
-                                            )
-                                        }}
+                                            ) }}
                                     </em>
                                 </td>
-                                {# Formatação obrigatória exigida no teste #}
                                 <td class="text-success fw-bold">
-                                    R$ {{ livro.livro_valor|number_format(2, ',', '.') }}
+                                    R$
+                                    {{ livro.livro_valor|number_format(2, ',', '.') }}
                                 </td>
                             </tr>
                         {% endfor %}

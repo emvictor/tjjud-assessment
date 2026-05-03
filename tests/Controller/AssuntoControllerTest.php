@@ -3,17 +3,18 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Assunto;
+use App\Entity\Livro;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Request;
 
 final class AssuntoControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
     private EntityManagerInterface $manager;
-
-    /** @var EntityRepository<Assunto> */
     private EntityRepository $assuntoRepository;
     private string $path = '/assunto/';
 
@@ -23,102 +24,114 @@ final class AssuntoControllerTest extends WebTestCase
         $this->manager = static::getContainer()->get('doctrine')->getManager();
         $this->assuntoRepository = $this->manager->getRepository(Assunto::class);
 
-        foreach ($this->assuntoRepository->findAll() as $object) {
-            $this->manager->remove($object);
-        }
-
-        $this->manager->flush();
+        $this->manager->createQuery('DELETE FROM App\Entity\Livro')->execute();
+        $this->manager->createQuery('DELETE FROM App\Entity\Assunto')->execute();
+        $this->manager->clear();
     }
 
-    public function testIndex(): void
+    private function generateCsrfToken(string $tokenId): string
     {
-        $this->client->followRedirects();
-        $crawler = $this->client->request('GET', $this->path);
+        $session = static::getContainer()->get('session.factory')->createSession();
+        $session->start();
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Assunto index');
+        $request = new Request();
+        $request->setSession($session);
+        static::getContainer()->get('request_stack')->push($request);
 
-        // Use the $crawler to perform additional assertions e.g.
-        // self::assertSame('Some text on the page', $crawler->filter('.p')->first()->text());
+        $token = static::getContainer()
+            ->get('security.csrf.token_manager')
+            ->getToken($tokenId)
+            ->getValue();
+
+        $session->save();
+        static::getContainer()->get('request_stack')->pop();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
+
+        return $token;
     }
+
 
     public function testNew(): void
     {
-        $this->client->request('GET', sprintf('%snew', $this->path));
+        $csrfToken = $this->generateCsrfToken('assunto');
 
-        self::assertResponseStatusCodeSame(200);
-
-        $this->client->submitForm('Save', [
-            'assunto[desdescricao]' => 'Testing',
-            'assunto[livros]' => 'Testing',
+        $this->client->request('POST', sprintf('%snew', $this->path), [
+            'assunto' => [
+                'descricao' => 'Ficção Científica',
+                '_token' => $csrfToken,
+            ],
         ]);
 
         self::assertResponseRedirects('/assunto');
-
         self::assertSame(1, $this->assuntoRepository->count([]));
-
-        $this->markTestIncomplete('This test was generated');
-    }
-
-    public function testShow(): void
-    {
-        $fixture = new Assunto();
-        $fixture->setDesdescricao('My Title');
-        $fixture->setLivros('My Title');
-
-        $this->manager->persist($fixture);
-        $this->manager->flush();
-
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
-
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Assunto');
-
-        // Use assertions to check that the properties are properly displayed.
-        $this->markTestIncomplete('This test was generated');
     }
 
     public function testEdit(): void
     {
         $fixture = new Assunto();
-        $fixture->setDesdescricao('Value');
-        $fixture->setLivros('Value');
-
+        $fixture->setDescricao('Antigo');
         $this->manager->persist($fixture);
         $this->manager->flush();
 
-        $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
+        $csrfToken = $this->generateCsrfToken('assunto');
 
-        $this->client->submitForm('Update', [
-            'assunto[desdescricao]' => 'Something New',
-            'assunto[livros]' => 'Something New',
+        $this->client->request('POST', sprintf('%s%s/edit', $this->path, $fixture->getId()), [
+            'assunto' => [
+                'descricao' => 'Novo',
+                '_token' => $csrfToken,
+            ],
         ]);
 
         self::assertResponseRedirects('/assunto');
-
-        $fixture = $this->assuntoRepository->findAll();
-
-        self::assertSame('Something New', $fixture[0]->getDesdescricao());
-        self::assertSame('Something New', $fixture[0]->getLivros());
-
-        $this->markTestIncomplete('This test was generated');
+        $this->manager->refresh($fixture);
+        self::assertSame('Novo', $fixture->getDescricao());
     }
 
     public function testRemove(): void
     {
         $fixture = new Assunto();
-        $fixture->setDesdescricao('Value');
-        $fixture->setLivros('Value');
-
+        $fixture->setDescricao('Para Deletar');
         $this->manager->persist($fixture);
         $this->manager->flush();
 
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
-        $this->client->submitForm('Delete');
+        $id = $fixture->getId();
+        $csrfToken = $this->generateCsrfToken('delete' . $id);
+
+        $this->client->request('POST', sprintf('%s%s', $this->path, $id), [
+            '_token' => $csrfToken,
+        ]);
 
         self::assertResponseRedirects('/assunto');
         self::assertSame(0, $this->assuntoRepository->count([]));
+    }
 
-        $this->markTestIncomplete('This test was generated');
+    public function testCannotRemoveAssuntoWithLivros(): void
+    {
+        $assunto = new Assunto();
+        $assunto->setDescricao('Tecnologia');
+
+        $livro = new Livro();
+        $livro->setTitulo('Clean Code');
+        $livro->setEditora('Prentice Hall');
+        $livro->setEdicao(1);
+        $livro->setAnoPublicacao('2008');
+        $livro->setValor('120.00');
+
+        $assunto->addLivro($livro);
+        $this->manager->persist($assunto);
+        $this->manager->persist($livro);
+        $this->manager->flush();
+
+        $id = $assunto->getId();
+        $csrfToken = $this->generateCsrfToken('delete' . $id);
+
+        $this->client->request('POST', sprintf('%s%s', $this->path, $id), [
+            '_token' => $csrfToken,
+        ]);
+
+        self::assertResponseRedirects(sprintf('/assunto/%s', $id));
+        self::assertSame(1, $this->assuntoRepository->count(['id' => $id]));
     }
 }

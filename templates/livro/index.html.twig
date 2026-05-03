@@ -6,7 +6,6 @@
 
 {% block body %}
     <div class="container mt-4">
-        {# Using the Web Component we defined earlier #}
         <action-card title="Livros" variant="primary">
 
             <div class="table-responsive">
@@ -86,7 +85,6 @@
                 </table>
             </div>
 
-            {# Footer area for actions inside the card #}
             <div class="mt-3 pt-3 border-top">
                 <a href="{{ path('app_livro_new') }}" class="btn btn-success">
                     <i class="bi bi-plus-lg"></i>
