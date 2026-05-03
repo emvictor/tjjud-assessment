@@ -6,6 +6,8 @@
 
 {% block body %}
     <div class="container mt-4 pb-5">
+        <div id="test-relatorio-data" data-payload="{{ relatorio|json_encode }}" style="display: none;"></div>
+
         <div class="d-flex justify-content-between align-items-end mb-4 d-print-none">
             <div>
                 <h1 class="fw-bold mb-0">
