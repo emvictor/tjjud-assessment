@@ -1,56 +1,68 @@
-{{ form_start(form) }}
-<div class="mb-3">
-    {{ form_label(form.titulo, 'Título do Livro', {'label_attr': {'class': 'form-label fw-semibold' }}
-    ) }}
-    {{ form_widget(form.titulo, {'attr': {'class': 'form-control', 'placeholder': 'Ex: O Guarani' }}
-    ) }}
-    {{ form_errors(form.titulo) }}
-</div>
-<div class="mb-3">
-    {{ form_label(form.editora, 'Editora', {'label_attr': {'class': 'form-label fw-semibold' }}
-    ) }}
-    {{ form_widget(form.editora, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Globo' }}
-    ) }}
-    {{ form_errors(form.editora) }}
-</div>
-<div class="mb-3">
-    {{ form_label(form.edicao, 'Edição', {'label_attr': {'class': 'form-label fw-semibold' }}
-    ) }}
-    {{ form_widget(form.edicao, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 1' }}
-    ) }}
-    {{ form_errors(form.edicao) }}
-</div>
-<div class="mb-3">
-    {{ form_label(form.anoPublicacao, 'Ano de Publicação', {'label_attr': {'class': 'form-label fw-semibold' }}
-    ) }}
-    {{ form_widget(form.anoPublicacao, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 2020' }}
-    ) }}
-    {{ form_errors(form.anoPublicacao) }}
-</div>
-<price-field class="mb-3">
-    {{ form_label(form.valor, 'Valor (R$)', {'label_attr': {'class': 'form-label fw-semibold' }}
-    ) }}
-    {{ form_widget(form.valor, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 12.00' }}
-    ) }}
-    {{ form_errors(form.valor) }}
-</price-field>
-<div>
-    {{ form_label(form.autores, 'Autores', {'label_attr': {'class': 'form-label fw-semibold' }}
-    ) }}
-    {{ form_widget(form.autores, {'attr': {'class': 'form-select', 'multiple': 'multiple' }}
-    ) }}
-    {{ form_errors(form.autores) }}
-</div>
-<div>
-    {{ form_label(form.assuntos, 'Assuntos', {'label_attr': {'class': 'form-label fw-semibold' }}
-    ) }}
-    {{ form_widget(form.assuntos, {'attr': {'class': 'form-select', 'multiple': 'multiple' }}
-    ) }}
-    {{ form_errors(form.assuntos) }}
-</div>
+{{ form_start(form, {'attr': {'id': 'form-livro' }}
+) }}
+<div class="row g-3">
+    <div class="col-12 mb-2">
+        {{ form_label(form.titulo, 'Título do Livro', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem; letter-spacing: 0.5px;' }}
+        ) }}
+        {{ form_widget(form.titulo, {'attr': {'class': 'form-control form-control-lg fs-6 shadow-sm', 'placeholder': 'Ex: Memórias Póstumas de Brás Cubas' }}
+        ) }}
+        {{ form_errors(form.titulo) }}
+    </div>
 
-<button class="btn btn-success w-100 mt-2">
-    <i class="bi bi-check-circle"></i>
-    {{ button_label|default('Salvar') }}
-</button>
+    <div class="col-md-6 mb-2">
+        {{ form_label(form.editora, 'Editora', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
+        ) }}
+        {{ form_widget(form.editora, {'attr': {'class': 'form-control shadow-sm', 'placeholder': 'Ex: Sextante' }}
+        ) }}
+        {{ form_errors(form.editora) }}
+    </div>
+
+    <div class="col-md-3 mb-2">
+        {{ form_label(form.edicao, 'Edição', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
+        ) }}
+        {{ form_widget(form.edicao, {'attr': {'class': 'form-control shadow-sm', 'placeholder': 'Ex: 1' }}
+        ) }}
+        {{ form_errors(form.edicao) }}
+    </div>
+
+    <div class="col-md-3 mb-2">
+        {{ form_label(form.anoPublicacao, 'Ano', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
+        ) }}
+        {{ form_widget(form.anoPublicacao, {'attr': {'class': 'form-control shadow-sm', 'placeholder': '2024' }}
+        ) }}
+        {{ form_errors(form.anoPublicacao) }}
+    </div>
+
+    <div class="col-md-4 mb-2">
+        {{ form_label(form.valor, 'Valor (R$)', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
+        ) }}
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-light border-end-0 text-muted small">
+                R$
+            </span>
+            {{ form_widget(form.valor, {'attr': {'class': 'form-control border-start-0', 'placeholder': '0.00', 'step': '0.01', 'min': '0' }}
+            ) }}
+        </div>
+        {{ form_errors(form.valor) }}
+    </div>
+
+    <div class="col-md-8 mb-2">
+        {{ form_label(form.autores, 'Autores', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
+        ) }}
+        {{ form_widget(form.autores, {'attr': {'class': 'form-select shadow-sm', 'style': 'height: 100px;' }}
+        ) }}
+        <small class="text-muted tiny mt-1 d-block">
+            Segure Ctrl (ou Cmd) para selecionar múltiplos.
+        </small>
+        {{ form_errors(form.autores) }}
+    </div>
+
+    <div class="col-12 mb-2">
+        {{ form_label(form.assuntos, 'Assuntos', {'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem;' }}
+        ) }}
+        {{ form_widget(form.assuntos, {'attr': {'class': 'form-select shadow-sm', 'style': 'height: 80px;' }}
+        ) }}
+        {{ form_errors(form.assuntos) }}
+    </div>
+</div>
 {{ form_end(form) }}

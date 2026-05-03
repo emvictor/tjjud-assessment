@@ -1,95 +1,117 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Detalhes do Livro
+    Livro:
+    {{ livro.titulo }}
 {% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+    <div class="container mt-4 pb-5">
+        <div class="mb-4">
+            <a href="{{ path('app_livro_index') }}" class="btn btn-link link-secondary p-0 text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+                Voltar para o catálogo
+            </a>
+        </div>
 
-                <action-card title="Informações do Livro" variant="secondary">
-                    <div class="row mb-4">
-                        <div class="col-sm-4 fw-bold text-muted text-uppercase small">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                {% set card_body %}
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label class="text-uppercase tiny fw-bold text-muted d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">
                             Título
-                        </div>
-                        <div class="col-sm-8 fs-5">
+                        </label>
+                        <h2 class="fw-bold text-dark">
                             {{ livro.titulo }}
-                        </div>
+                        </h2>
                     </div>
 
-                    <div class="row mb-4">
-                        <div class="col-sm-4 fw-bold text-muted text-uppercase small">
-                            {{ livro.autores.count() > 1 ? 'Autores' : 'Autor' }}
-                        </div>
-                        <div class="col-sm-8">
+                    <div class="col-12">
+                        <label class="text-uppercase tiny fw-bold text-muted d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                            {{ livro.autores|length > 1 ? 'Autores' : 'Autor' }}
+                        </label>
+                        <div class="d-flex flex-wrap gap-2">
                             {% for autor in livro.autores %}
-                                <a href="{{ path('app_autor_show', {id: autor.id}) }}" class="badge bg-light text-dark border me-1">
-                                    {{ autor }}
+                                <a href="{{ path('app_autor_show', {id: autor.id}) }}" class="badge bg-white text-primary border px-3 py-2 fw-medium text-decoration-none rounded-pill">
+                                    <i class="bi bi-person me-1"></i>
+                                    {{ autor.nome }}
                                 </a>
                             {% endfor %}
                         </div>
                     </div>
 
-                    <hr class="text-muted opacity-25">
+                    {% if livro.assuntos|default([]) is not empty %}
+                        <div class="col-12">
+                            <label class="text-uppercase tiny fw-bold text-muted d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                                Assuntos
+                            </label>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for assunto in livro.assuntos %}
+                                    <a href="{{ path('app_assunto_show', {id: assunto.id}) }}" class="badge bg-light text-secondary border-0 px-2 py-1 fw-normal">
+                                        #
+                                        {{ assunto.descricao }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
 
-                        <div class="row g-3">
-                            <div class="col-6 col-md-3">
-                                <div class="fw-bold text-muted small text-uppercase">
-                                    Editora
+                    <div class="col-12 mt-4">
+                        <div class="bg-light rounded-4 p-4 border shadow-sm">
+                            <div class="row text-center g-3">
+                                <div class="col-6 col-md-3 border-end">
+                                    <small class="text-uppercase fw-bold text-muted d-block mb-1" style="font-size: 0.65rem;">
+                                        Editora
+                                    </small>
+                                    <span class="fw-bold">
+                                        {{ livro.editora }}
+                                    </span>
                                 </div>
-                                <div>
-                                    {{ livro.editora }}
+                                <div class="col-6 col-md-3 border-end">
+                                    <small class="text-uppercase fw-bold text-muted d-block mb-1" style="font-size: 0.65rem;">
+                                        Edição
+                                    </small>
+                                    <span class="fw-bold">
+                                        {{ livro.edicao }}
+                                        ª
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div class="fw-bold text-muted small text-uppercase">
-                                    Edição
+                                <div class="col-6 col-md-3 border-end">
+                                    <small class="text-uppercase fw-bold text-muted d-block mb-1" style="font-size: 0.65rem;">
+                                        Ano
+                                    </small>
+                                    <span class="fw-bold">
+                                        {{ livro.anoPublicacao }}
+                                    </span>
                                 </div>
-                                <div>
-                                    {{ livro.edicao }}
-                                    ª
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div class="fw-bold text-muted small text-uppercase">
-                                    Ano
-                                </div>
-                                <div>
-                                    {{ livro.anoPublicacao }}
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div class="fw-bold text-muted small text-uppercase">
-                                    Preço
-                                </div>
-                                <div class="text-success fw-bold">
-                                    R$
-                                    {{ livro.valor|number_format(2, ',', '.') }}
+                                <div class="col-6 col-md-3">
+                                    <small class="text-uppercase fw-bold text-muted d-block mb-1" style="font-size: 0.65rem;">
+                                        Preço
+                                    </small>
+                                    <span class="text-success fw-bold">
+                                        R$
+                                        {{ livro.valor|number_format(2, ',', '.') }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="mt-5 pt-3 border-top d-flex justify-content-between align-items-center">
-                            <a href="{{ path('app_livro_index') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-list"></i>
-                                Voltar
-                            </a>
-
-                            <div>
-                                <a href="{{ path('app_livro_edit', {id: livro.id}) }}" class="btn btn-primary">
-                                    Editar
-                                </a>
-                                <modal-button message="Excluir '{{ livro.titulo }}' permanentemente?">
-                                    Excluir
-                                </modal-button>
-                            </div>
-                        </div>
-                    </action-card>
-
+                    </div>
                 </div>
+                {% endset %}
+
+                {{ include('components/_action_card.html.twig', {
+                    'title': 'Informações do Livro',
+                    'icon': 'journal-bookmark-fill',
+                    'variant': 'dark',
+                    'body': card_body,
+                    'variant_type': 'show',
+                    'edit_path': path('app_livro_edit', {id: livro.id}),
+                    'delete_form': 'livro/_delete_form.html.twig'
+                }) }}
+
             </div>
         </div>
-    {% endblock %}
-    
+    </div>
+{% endblock %}

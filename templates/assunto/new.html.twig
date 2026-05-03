@@ -1,11 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Assunto{% endblock %}
+{% block title %}
+    Novo Assunto
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Assunto</h1>
+    <div class="container mt-4 pb-5">
+        <div class="mb-4">
+            <a href="{{ path('app_assunto_index') }}" class="btn btn-link link-secondary p-0 text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+                Voltar para a lista
+            </a>
+        </div>
 
-    {{ include('assunto/_form.html.twig') }}
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
 
-    <a href="{{ path('app_assunto_index') }}">back to list</a>
+                {% set card_body %}
+                <div class="py-2">
+                    {{ include('assunto/_form.html.twig') }}
+                </div>
+                {% endset %}
+
+                {{ include('components/_action_card.html.twig', {
+                'title': 'Cadastrar Novo Assunto',
+                'icon': 'tag-plus',
+                'variant': 'primary',
+                'body': card_body,
+                'variant_type': 'new',
+                'form_id': 'form-assunto',
+                'cancel_path': path('app_assunto_index')
+            }) }}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}

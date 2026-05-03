@@ -1,4 +1,12 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'id': 'form-assunto' }}
+) }}
+<div class="mb-3">
+    {{ form_label(form.descricao, 'Descrição do Assunto', {
+            'label_attr': {'class': 'text-uppercase tiny fw-bold text-muted mb-1', 'style': 'font-size: 0.7rem; letter-spacing: 0.5px;'}
+        }) }}
+    {{ form_widget(form.descricao, {
+            'attr': {'class': 'form-control form-control-lg fs-6 shadow-sm', 'placeholder': 'Ex: Romance, Ficção Científica...'}
+        }) }}
+    {{ form_errors(form.descricao) }}
+</div>
 {{ form_end(form) }}

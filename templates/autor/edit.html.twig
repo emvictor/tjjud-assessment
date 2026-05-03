@@ -1,13 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Autor{% endblock %}
+{% block title %}
+    Editar Autor:
+    {{ autor.nome }}
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Autor</h1>
+    <div class="container mt-4 pb-5">
+        <div class="mb-4">
+            <a href="{{ path('app_autor_index') }}" class="btn btn-link link-secondary p-0 text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+                Voltar para a lista
+            </a>
+        </div>
 
-    {{ include('autor/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
 
-    <a href="{{ path('app_autor_index') }}">back to list</a>
+                {% set card_body %}
+                <div class="py-2">
+                    {{ include('autor/_form.html.twig') }}
+                </div>
 
-    {{ include('autor/_delete_form.html.twig') }}
+                <div class="mt-4 pt-4 border-top">
+                    <div class="d-flex align-items-center text-muted small">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <span>
+                            Alterar o nome do autor atualizará automaticamente todos os livros vinculados.
+                        </span>
+                    </div>
+                </div>
+                {% endset %}
+
+                {% set card_footer %}
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <button type="submit" form="form-autor" class="btn btn-primary px-4">
+                        <i class="bi bi-check-lg me-2"></i>
+                        Salvar Alterações
+                    </button>
+
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_autor_show', {id: autor.id}) }}" class="btn btn-light border px-4">
+                            Cancelar
+                        </a>
+                        <div>
+                            {{ include('autor/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                </div>
+                {% endset %}
+
+                {{ include('components/_action_card.html.twig', {
+                'title': 'Editar Autor',
+                'icon': 'person-gear',
+                'variant': 'primary',
+                'body': card_body,
+                'footer': card_footer,
+                'variant_type': 'edit',
+                'cancel_path': path('app_autor_show', {id: autor.id}),
+                'edit_path': path('app_autor_edit', {id: autor.id}),
+                'delete_form': 'autor/_delete_form.html.twig',
+                'form_id': 'form-autor'
+            }) }}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}

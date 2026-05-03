@@ -1,11 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Livro{% endblock %}
+{% block title %}
+    Novo Livro
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Livro</h1>
+    <div class="container mt-4 pb-5">
+        <div class="mb-4">
+            <a href="{{ path('app_livro_index') }}" class="btn btn-link link-secondary p-0 text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+                Voltar para o catálogo
+            </a>
+        </div>
 
-    {{ include('livro/_form.html.twig') }}
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
 
-    <a href="{{ path('app_livro_index') }}">back to list</a>
+                {% set card_body %}
+                <div class="py-2">
+                    {{ include('livro/_form.html.twig', {'button_label': 'Cadastrar Livro'}) }}
+                </div>
+
+                <div class="mt-4 pt-4 border-top">
+                    <div class="d-flex align-items-center text-muted small">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <span>
+                            Certifique-se de preencher todos os campos.
+                        </span>
+                    </div>
+                </div>
+                {% endset %}
+
+                {{ include('components/_action_card.html.twig', {
+                'title': 'Cadastrar Novo Livro',
+                'icon': 'journal-plus',
+                'variant': 'success',
+                'body': card_body,
+                
+                'variant_type': 'new',
+                'form_id': 'form-livro',
+                'cancel_path': path('app_livro_index')
+            }) }}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}

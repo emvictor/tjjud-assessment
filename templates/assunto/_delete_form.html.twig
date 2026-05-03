@@ -1,4 +1,6 @@
-<form method="post" action="{{ path('app_assunto_delete', {'id': assunto.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+<form method="post" action="{{ path('app_assunto_delete', {'id': assunto.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ assunto.id) }}">
-    <button class="btn">Delete</button>
-</form>
+
+        <twig:delete_button title="Excluir Assunto" message="Deseja realmente excluir o assunto <strong>{{ assunto.descricao }}</strong>?" class="btn border-0"></twig:delete_button>
+    </form>
+    

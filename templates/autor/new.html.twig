@@ -1,11 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Autor{% endblock %}
+{% block title %}
+    Novo Autor
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Autor</h1>
+    <div class="container mt-4 pb-5">
+        <div class="mb-4">
+            <a href="{{ path('app_autor_index') }}" class="btn btn-link link-secondary p-0 text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+                Voltar para a lista
+            </a>
+        </div>
 
-    {{ include('autor/_form.html.twig') }}
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
 
-    <a href="{{ path('app_autor_index') }}">back to list</a>
+                {% set card_body %}
+                <div class="py-2">
+                    {{ include('autor/_form.html.twig') }}
+                </div>
+                {% endset %}
+
+                {% set card_footer %}
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <button type="submit" form="form-autor" class="btn btn-primary px-4">
+                        <i class="bi bi-plus-lg me-2"></i>
+                        Cadastrar Autor
+                    </button>
+
+                    <a href="{{ path('app_autor_index') }}" class="btn btn-light border px-4">
+                        Cancelar
+                    </a>
+                </div>
+                {% endset %}
+
+                {{ include('components/_action_card.html.twig', {
+                    'title': 'Cadastrar Novo Autor',
+                    'icon': 'person-plus',
+                    'variant': 'success',
+                    'body': card_body,
+                    'footer': card_footer,
+                    'variant_type': 'new',
+                    'cancel_path': path('app_autor_index')
+                }) }}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
