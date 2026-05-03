@@ -1,0 +1,48 @@
+<div class="col" data-testid="livro-item">
+    <div class="card h-100 shadow-sm border-0 transition-hover">
+        <div class="card-header bg-transparent border-0 pt-3">
+            <h5 class="card-title fw-bold mb-0 text-truncate" title="{{ livro.titulo }}">
+                {{ livro.titulo }}
+            </h5>
+            <span class="badge bg-primary-subtle text-primary mb-2">
+                {{ livro.anoPublicacao }}
+            </span>
+        </div>
+
+        <div class="card-body">
+            <p class="text-muted small mb-3">
+                <i class="bi bi-person-fill"></i>
+                {{ livro.autores|join(', ') ?: 'Autor não informado' }}
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="text-uppercase tiny text-muted fw-bold" style="font-size: 0.7rem;">
+                        Editora
+                    </div>
+                    <div class="small">
+                        {{ livro.editora }}
+                        (
+                        {{ livro.edicao }}
+                        ª Ed.)
+                    </div>
+                </div>
+                <div class="text-end">
+                    <div class="text-success fw-bold h5 mb-0">
+                        R$
+                        {{ livro.valor|number_format(2, ',', '.') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer bg-light border-0 d-flex gap-2">
+            <a href="{{ path('app_livro_show', {id: livro.id}) }}" class="btn btn-sm btn-outline-secondary w-100">
+                Ver Detalhes
+            </a>
+            <a href="{{ path('app_livro_edit', {id: livro.id}) }}" class="btn btn-sm btn-primary w-100">
+                Editar
+            </a>
+        </div>
+    </div>
+</div>

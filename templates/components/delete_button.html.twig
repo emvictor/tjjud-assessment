@@ -1,0 +1,41 @@
+{% set uid = 'modal-' ~ random() %}
+
+<button type="button" {{ attributes.defaults({ class: 'btn btn-danger' }) }} data-bs-toggle="modal" data-bs-target="#{{ uid }}">
+    <i class="bi bi-trash me-2"></i>
+    {{ label|default('Excluir') | raw }}
+</button>
+
+<div class="modal fade" id="{{ uid }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header bg-dark text-white border-0 py-3">
+                <h5 class="modal-title fw-bold h6 mb-0">
+                    <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+                    {{ title|default('Confirmação de Exclusão') }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body py-4 px-4 text-dark">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        {{ message|raw }}
+                        <p class="text-muted small mb-0 mt-2">
+                            Esta operação não poderá ser desfeita.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer bg-light border-0 py-3 px-4">
+                <button type="button" class="btn btn-link text-secondary text-decoration-none fw-bold" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-danger px-4 rounded-3 fw-bold shadow-sm" onclick="this.closest('form').submit()">
+                    <i class="bi bi-trash me-2"></i>
+                    Confirmar Exclusão
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

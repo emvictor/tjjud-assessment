@@ -1,0 +1,6 @@
+{% if path is defined and path %}
+    <a href="{{ path }}" class="btn btn-sm btn-light text-primary fw-bold shadow-sm border">
+        <i class="bi bi-plus-lg me-1"></i>
+        {{ label|default('Novo Cadastro') }}
+    </a>
+{% endif %}

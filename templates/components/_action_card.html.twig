@@ -1,0 +1,45 @@
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+    {% if title is defined %}
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="fw-bold h4 mb-0">
+                    {% if icon is defined %}
+                        <i class="bi bi-{{ icon }} me-2 text-primary"></i>
+                    {% endif %}
+                    {{ title }}
+                </h2>
+
+                {% if header_action is defined %}
+                    {{ header_action|raw }}
+                {% elseif new_path is defined %}
+                    {{ include('components/_header_action.html.twig', {
+                        'path': new_path,
+                        'label': new_label|default(null)
+                    }) }}
+                {% endif %}
+            </div>
+        </div>
+        <hr class="mx-4 mb-0 opacity-10">
+        {% endif %}
+
+        <div class="card-body p-4">
+            {{ body|raw }}
+        </div>
+
+        {% if footer is defined or variant_type is defined %}
+            <div class="card-footer bg-light border-0 py-3 px-4">
+                {% if variant_type is defined %}
+                    {{ include('components/_card_actions.html.twig', {
+            'variant': variant_type,
+            'formId': form_id|default(null),
+            'cancelPath': cancel_path|default(null),
+            'deleteForm': delete_form|default(null),
+            'editPath': edit_path|default(null)
+        }) }}
+                {% else %}
+                    {{ footer|raw }}
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    
