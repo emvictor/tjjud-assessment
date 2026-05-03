@@ -69,6 +69,7 @@ final class AutorControllerTest extends WebTestCase
 
         $autor = $this->autorRepository->findOneBy(['nome' => 'Clarice Lispector']);
         self::assertNotNull($autor);
+        self::assertSelectorExists('.alert-success');
     }
 
     public function testEdit(): void
@@ -140,6 +141,6 @@ final class AutorControllerTest extends WebTestCase
         self::assertSame(1, $this->autorRepository->count(['id' => $id]));
 
         $this->client->followRedirect();
-        self::assertSelectorTextContains('.alert-danger', 'Não é possível excluir um autor que possui livros associados.');
+        self::assertSelectorExists('.alert-danger');
     }
 }

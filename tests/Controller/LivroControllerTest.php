@@ -35,7 +35,6 @@ final class LivroControllerTest extends WebTestCase
     {
         $this->client->catchExceptions(false);
 
-        // 1. Create Prerequisite Data
         $autor = new Autor();
         $autor->setNome('Machado de Assis');
         $assunto = new Assunto();
@@ -45,7 +44,6 @@ final class LivroControllerTest extends WebTestCase
         $this->manager->persist($assunto);
         $this->manager->flush();
 
-        // 2. Setup the session and CSRF token manually
         $session = static::getContainer()->get('session.factory')->createSession();
         $session->start();
 
@@ -53,7 +51,6 @@ final class LivroControllerTest extends WebTestCase
         $request->setSession($session);
         static::getContainer()->get('request_stack')->push($request);
 
-        // In Symfony Forms, the token ID is typically the form name (usually the lowercase class name)
         $csrfToken = static::getContainer()
             ->get('security.csrf.token_manager')
             ->getToken('livro')
@@ -62,12 +59,9 @@ final class LivroControllerTest extends WebTestCase
         $session->save();
         static::getContainer()->get('request_stack')->pop();
 
-        // Sync the client's cookies with our manual session
         $cookie = new \Symfony\Component\BrowserKit\Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
 
-        // 3. Perform a raw POST request (Purely Functional)
-        // We pass the data exactly as the Form component expects it
         $this->client->request('POST', sprintf('%snew', $this->path), [
             'livro' => [
                 'titulo' => 'Dom Casmurro',
@@ -77,22 +71,19 @@ final class LivroControllerTest extends WebTestCase
                 'valor' => '55.00',
                 'autores' => [$autor->getId()],
                 'assuntos' => [$assunto->getId()],
-                '_token' => $csrfToken, // Include the token inside the form array
+                '_token' => $csrfToken,
             ],
         ]);
 
-        // 4. Assertions
         self::assertResponseRedirects('/livro');
         self::assertSame(1, $this->livroRepository->count([]));
         $createdLivro = $this->livroRepository->findOneBy(['titulo' => 'Dom Casmurro']);
 
         self::assertNotNull($createdLivro);
 
-        // Verify Autores
         self::assertCount(1, $createdLivro->getAutores());
         self::assertEquals('Machado de Assis', $createdLivro->getAutores()[0]->getNome());
 
-        // Verify Assuntos (The missing piece!)
         self::assertCount(1, $createdLivro->getAssuntos());
         self::assertEquals('Romance', $createdLivro->getAssuntos()[0]->getDescricao());
     }
@@ -170,9 +161,9 @@ final class LivroControllerTest extends WebTestCase
         $this->manager->persist($livro1);
         $this->manager->flush();
 
-        $this->client->request('GET', sprintf('%snew', $this->path));
+        $crawler = $this->client->request('GET', sprintf('%snew', $this->path));
 
-        $this->client->submitForm('Salvar', [
+        $form = $crawler->filter('#form-livro')->form([
             'livro[titulo]' => 'Livro Duplicado',
             'livro[editora]' => 'Editora X',
             'livro[edicao]' => 1,
@@ -180,6 +171,7 @@ final class LivroControllerTest extends WebTestCase
             'livro[valor]' => '150.00',
         ]);
 
+        $this->client->submit($form);
 
         self::assertResponseStatusCodeSame(422);
 
