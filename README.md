@@ -28,7 +28,7 @@ Certifique-se de ter as seguintes ferramentas instaladas em seu ambiente de dese
 **1. Clone o repositório e acesse o diretório:**
 
 ```bash
-git clone [https://github.com/seu-usuario/tjjud-assessment.git](https://github.com/seu-usuario/tjjud-assessment.git)
+git clone https://github.com/emvictor/tjjud-assessment.git
 cd tjjud-assessment
 ```
 
